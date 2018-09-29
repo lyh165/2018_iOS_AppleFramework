@@ -1,0 +1,14 @@
+--- !tapi-tbd-v3
+archs:           [ i386, x86_64 ]
+uuids:           [ 'i386: 00000000-0000-0000-0000-000000000000', 'x86_64: 0A0B9CC2-465B-3C80-994B-02823E112618' ]
+platform:        ios
+install-name:    /System/Library/Frameworks/BusinessChat.framework/BusinessChat
+objc-constraint: none
+exports:         
+  - archs:           [ i386, x86_64 ]
+    symbols:         [ _BCLoggingEventNameExpired, _BCLoggingEventNameFailure, _BCLoggingEventNameFallback, 
+                       _BCLoggingEventNameNotEligible, _BCLoggingEventNameOpen, _BCLoggingEventNameReplied, 
+                       _BCLoggingEventNameSuccess, _BCParameterNameBody, _BCParameterNameGroup, 
+                       _BCParameterNameIntent ]
+    objc-classes:    [ BCApplePayManager, BCChatAction, BCChatButton, BCLogger, BCMessage ]
+...

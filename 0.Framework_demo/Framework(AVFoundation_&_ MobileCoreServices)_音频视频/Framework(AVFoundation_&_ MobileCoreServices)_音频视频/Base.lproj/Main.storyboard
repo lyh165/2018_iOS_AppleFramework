@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="VAU-Y1-Fmt">
+                                <rect key="frame" x="67" y="269" width="240" height="128"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="240" id="a6x-B0-0Dl"/>
+                                    <constraint firstAttribute="height" constant="128" id="wvV-lE-8eL"/>
+                                </constraints>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lwl-d3-uis">
+                                <rect key="frame" x="61" y="547" width="252" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="Jpp-dO-3UC"/>
+                                </constraints>
+                                <state key="normal" title="1、录制视频并且把视频的第一帧保持"/>
+                                <connections>
+                                    <action selector="takeClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="DiA-sa-weh"/>
+                                </connections>
+                            </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ppz-8b-jqK">
+                                <rect key="frame" x="67" y="55" width="240" height="128"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="240" id="D11-u2-oCd"/>
+                                    <constraint firstAttribute="height" constant="128" id="sTw-Sl-rIc"/>
+                                </constraints>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fg6-NU-PcQ">
+                                <rect key="frame" x="106" y="597" width="162" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="qgM-s1-bgP"/>
+                                </constraints>
+                                <state key="normal" title="2、获取系统的所有视频"/>
+                                <connections>
+                                    <action selector="getSystemVideo:" destination="BYZ-38-t0r" eventType="touchUpInside" id="s14-W2-fRz"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="VAU-Y1-Fmt" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="7Gg-60-JwB"/>
+                            <constraint firstItem="lwl-d3-uis" firstAttribute="top" secondItem="VAU-Y1-Fmt" secondAttribute="bottom" constant="150" id="JTP-rq-EFC"/>
+                            <constraint firstItem="fg6-NU-PcQ" firstAttribute="top" secondItem="lwl-d3-uis" secondAttribute="bottom" constant="20" id="LrA-X2-2Dt"/>
+                            <constraint firstItem="ppz-8b-jqK" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="OP6-FH-NV4"/>
+                            <constraint firstItem="VAU-Y1-Fmt" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="lDX-rh-bcr"/>
+                            <constraint firstItem="ppz-8b-jqK" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="35" id="pH5-qK-c4t"/>
+                            <constraint firstItem="fg6-NU-PcQ" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="pHE-xg-dut"/>
+                            <constraint firstItem="lwl-d3-uis" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="xSQ-sO-c7l"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                    </view>
+                    <connections>
+                        <outlet property="Img_VideoFirst" destination="ppz-8b-jqK" id="S6R-o7-Pu0"/>
+                        <outlet property="photo" destination="VAU-Y1-Fmt" id="U8f-tc-3s9"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+        </scene>
+    </scenes>
+</document>

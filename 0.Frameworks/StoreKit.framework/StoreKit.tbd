@@ -1,0 +1,57 @@
+--- !tapi-tbd-v3
+archs:           [ i386, x86_64 ]
+uuids:           [ 'i386: 2A822546-7A13-35FA-B601-0266C225765F', 'x86_64: 92028F63-19A9-3F93-84DF-C5A9DCE0E04C' ]
+platform:        ios
+install-name:    /System/Library/Frameworks/StoreKit.framework/StoreKit
+objc-constraint: none
+exports:         
+  - archs:           [ i386, x86_64 ]
+    symbols:         [ _SKAccountPageAccountURLString, _SKAccountPageCharityURLString, 
+                       _SKAccountPageCustomURLString, _SKAccountPageGiftURLString, 
+                       _SKAccountPageRedeemURLString, _SKCloudServiceCapabilitiesDidChangeNotification, 
+                       _SKCloudServiceSetupActionSubscribe, _SKCloudServiceSetupMessageIdentifierAddMusic, 
+                       _SKCloudServiceSetupMessageIdentifierConnect, _SKCloudServiceSetupMessageIdentifierJoin, 
+                       _SKCloudServiceSetupMessageIdentifierPlayMusic, _SKCloudServiceSetupOptionsActionKey, 
+                       _SKCloudServiceSetupOptionsAffiliateTokenKey, _SKCloudServiceSetupOptionsCampaignTokenKey, 
+                       _SKCloudServiceSetupOptionsITunesItemIdentifierKey, _SKCloudServiceSetupOptionsMessageIdentifierKey, 
+                       _SKDownloadTimeRemainingUnknown, _SKErrorDomain, _SKGetDataForError, 
+                       _SKGetErrorForData, _SKGetRatingStarsImage, _SKReceiptPropertyIsExpired, 
+                       _SKReceiptPropertyIsRevoked, _SKReceiptPropertyIsVolumePurchase, 
+                       _SKStoreProductAppleCampaignParsec, _SKStoreProductParameterAdNetworkAttributionSignature, 
+                       _SKStoreProductParameterAdNetworkCampaignIdentifier, _SKStoreProductParameterAdNetworkIdentifier, 
+                       _SKStoreProductParameterAdNetworkNonce, _SKStoreProductParameterAdNetworkTimestamp, 
+                       _SKStoreProductParameterAdvertisingPartnerToken, _SKStoreProductParameterAffiliateToken, 
+                       _SKStoreProductParameterAppleCampaignIdentifier, _SKStoreProductParameterCampaignIdentifier, 
+                       _SKStoreProductParameterCampaignToken, _SKStoreProductParameterHighlightedITunesItemIdentifier, 
+                       _SKStoreProductParameterITunesItemIdentifier, _SKStoreProductParameterProductITunesItemIdentifier, 
+                       _SKStoreProductParameterProductIdentifier, _SKStoreProductParameterProviderToken, 
+                       _SKStoreProductParameterQToken, _SKStorefrontCountryCodeDidChangeNotification, 
+                       _SKStorefrontIdentifierDidChangeNotification, _SKTerminateForInvalidReceipt, 
+                       _SKUIServiceReviewSandboxMode, _SKXPCCreateCFObjectFromXPCObject, 
+                       _SKXPCCreateXPCObjectFromCFObject, _SKXPCDictionaryCopyCFObject, 
+                       _SKXPCDictionaryCopyCFObjectWithClass, _SKXPCDictionarySetCFObject, 
+                       __SKCloudServiceSetupOptionsAudioAccessorySerialNumberKey, 
+                       __SKCloudServiceSetupOptionsAudioAccessoryUniqueDeviceIdentifierKey ]
+    objc-classes:    [ SKAccountPageViewController, SKAdNetwork, SKAppInstallViewController, 
+                       SKCloudServiceController, SKCloudServiceSetupConfiguration, 
+                       SKCloudServiceSetupExtension, SKCloudServiceSetupReloadContext, 
+                       SKCloudServiceSetupRemoteViewController, SKCloudServiceSetupViewController, 
+                       SKComposeReviewViewController, SKDownload, SKDownloadChangeset, 
+                       SKHandleInvalidReceiptRequest, SKInstallSheetStatusUpdateRequest, 
+                       SKInternalProductStorePromotionController, SKMutablePayment, 
+                       SKPayment, SKPaymentInternal, SKPaymentQueue, SKPaymentQueueClient, 
+                       SKPaymentQueueInternal, SKPaymentTransaction, SKPaymentTransactionInternal, 
+                       SKPrivacyController, SKProduct, SKProductDiscount, SKProductInternal, 
+                       SKProductPageExtension, SKProductPageRemoteViewController, 
+                       SKProductStorePromotionController, SKProductSubscriptionPeriod, 
+                       SKProductsRequest, SKProductsRequestInternal, SKProductsResponse, 
+                       SKProductsResponseInternal, SKPromotedIAPGetInfoInternalRequest, 
+                       SKPromotedIAPGetOrderRequest, SKPromotedIAPGetVisibilityRequest, 
+                       SKPromotedIAPSetOrderRequest, SKPromotedIAPSetVisibilityRequest, 
+                       SKPurchaseIntent, SKReceiptRefreshRequest, SKRequest, SKRequestInternal, 
+                       SKStarRatingAlertController, SKStarRatingControl, SKStoreExtension, 
+                       SKStorePageRequest, SKStorePageViewController, SKStoreProductActivityViewController, 
+                       SKStoreProductViewController, SKStoreRemoteViewController, 
+                       SKStoreReviewController, SKStoreReviewPresentationWindow, 
+                       SKStoreReviewViewController, SKTermsPageViewController, _SKStoreProductActivityAnimationController ]
+...
