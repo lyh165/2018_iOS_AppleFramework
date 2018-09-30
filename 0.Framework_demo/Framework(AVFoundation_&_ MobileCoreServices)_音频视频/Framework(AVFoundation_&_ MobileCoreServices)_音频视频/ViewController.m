@@ -18,6 +18,9 @@
 #import <AVFoundation/AVTime.h>
 
 @interface ViewController ()<UIImagePickerControllerDelegate,UINavigationControllerDelegate>
+{
+    NSURL * CompressURL;
+}
 @property (assign,nonatomic) int isVideo;//是否录制视频，如果为1表示录制视频，0代表拍照
 @property (strong,nonatomic) UIImagePickerController *imagePicker;
 @property (weak, nonatomic) IBOutlet UIImageView *photo;//照片展示视图
@@ -33,6 +36,11 @@
  在 info.plist里面添加Localized resources can be mixed YES 表示是否允许应用程序获取框架库内语言。
  */
 
+
+#pragma 获取视频列表
+@property (nonatomic,strong) NSMutableArray        *groupArrays;
+@property (nonatomic,strong) UIImageView           *litimgView;
+
 @end
 
 @implementation ViewController
@@ -42,15 +50,34 @@
     [super viewDidLoad];
     //通过这里设置当前程序是拍照还是录制视频
     _isVideo=YES;
+    
+    
+    self.navigationItem.title = @"Demo";
+    self.view.backgroundColor = [UIColor clearColor];
+    
+    // 初始化
+    self.groupArrays = [NSMutableArray array];
+    
+    UIButton * btn1 = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn1.frame = CGRectMake(50, 50, 100, 50);
+    btn1.backgroundColor = [UIColor orangeColor];
+    [self.view addSubview:btn1];
+    [btn1 addTarget:self action:@selector(testRun) forControlEvents:UIControlEventTouchUpInside];
+    // 图片或者视频的缩略图显示
+    self.litimgView = [[UIImageView alloc] initWithFrame:CGRectMake(100, 200, 120, 120)];
+    [self.view addSubview:_litimgView];
+   
 }
 
 #pragma mark - UI事件
 //点击拍照按钮
 - (IBAction)takeClick:(UIButton *)sender {
+    NSLog(@"1、录制视频并且把视频的第一帧保持");
     [self presentViewController:self.imagePicker animated:YES completion:nil];
 }
 // 获取系统的视频
 - (IBAction)getSystemVideo:(UIButton *)sender {
+    NSLog(@"2、获取系统的所有视频");
 }
 
 #pragma mark - UIImagePickerController代理方法
@@ -119,13 +146,23 @@
 
         //录制完之后自动播放
         NSURL *url=[NSURL fileURLWithPath:videoPath];
+        NSString *compressionVideoPath = [self compression:url];
+        NSLog(@"compressionVideoPath %@",compressionVideoPath);
+
+#warning 这里可以在图片里面进行播放视频 项目一般不使用 这里只是用来测试
         _player=[AVPlayer playerWithURL:url];
         AVPlayerLayer *playerLayer=[AVPlayerLayer playerLayerWithPlayer:_player];
         playerLayer.frame=self.photo.frame;
         [self.photo.layer addSublayer:playerLayer];
         [_player play];
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             self.Img_VideoFirst.image = [self getVideoPreViewImage:url];
+            NSString *videoFirstImage = [self saveImage:[self getVideoPreViewImage:url]];
+            NSLog(@"videoFirstImage %@",videoFirstImage);
+            // 这里进行发送请求
+            NSLog(@"传递数据给服务器");
+
         });
 
     }
@@ -148,6 +185,265 @@
     return videoImage;
 }
 
+#pragma mark 视频压缩、计算压缩的大小、视频的第一帧
+//- (void)mov2mp4:(NSURL *)movUrl
+//{
+//    AVURLAsset *avAsset = [AVURLAsset URLAssetWithURL:movUrl options:nil];
+//    NSArray *compatiblePresets = [AVAssetExportSession exportPresetsCompatibleWithAsset:avAsset];
+//    /**
+//     AVAssetExportPresetMediumQuality 表示视频的转换质量，
+//     */
+//    if ([compatiblePresets containsObject:AVAssetExportPresetMediumQuality]) {
+//        AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset:avAsset presetName:AVAssetExportPresetMediumQuality];
+//        
+//        //转换完成保存的文件路径
+//        NSString * resultPath = [NSHomeDirectory() stringByAppendingFormat:@"/Documents/output-%@.mp4",@"cvt"];
+//        
+//        exportSession.outputURL = [NSURL fileURLWithPath:resultPath];
+//        
+//        //要转换的格式，这里使用 MP4
+//        exportSession.outputFileType = AVFileTypeMPEG4;
+//        
+//        //转换的数据是否对网络使用优化
+//        exportSession.shouldOptimizeForNetworkUse = YES;
+//        
+//        //异步处理开始转换
+//        [exportSession exportAsynchronouslyWithCompletionHandler:^(void)
+//         
+//         {
+//             //转换状态监控
+//             switch (exportSession.status) {
+//                 case AVAssetExportSessionStatusUnknown:
+//                     NSLog(@"AVAssetExportSessionStatusUnknown");
+//                     break;
+//                     
+//                 case AVAssetExportSessionStatusWaiting:
+//                     NSLog(@"AVAssetExportSessionStatusWaiting");
+//                     break;
+//                     
+//                 case AVAssetExportSessionStatusExporting:
+//                     NSLog(@"AVAssetExportSessionStatusExporting");
+//                     break;
+//                 case AVAssetExportSessionStatusFailed:
+//                     NSLog(@"AVAssetExportSessionStatusFailed");
+//                     break;
+//                 case AVAssetExportSessionStatusCancelled:
+//                     NSLog(@"AVAssetExportSessionStatusCancelled");
+//                     break;
+//                     
+//                 case AVAssetExportSessionStatusCompleted:
+//                 {
+//                     //转换完成
+//                     NSLog(@"AVAssetExportSessionStatusCompleted");
+//                     
+//                     //测试使用，保存在手机相册里面
+//                     ALAssetsLibrary *assetLibrary = [[ALAssetsLibrary alloc] init];
+//                     [assetLibrary writeVideoAtPathToSavedPhotosAlbum:exportSession.outputURL completionBlock:^(NSURL *assetURL, NSError *error){
+//                         if (error) {
+//                             NSLog(@"%@",error);
+//                         }
+//                     }];
+//                     break;
+//                 }
+//             }
+//             
+//         }];
+//        
+//    }
+//    
+//}
+
+
+//计算压缩大小
+- (CGFloat)fileSize:(NSURL *)path
+{
+    return [[NSData dataWithContentsOfURL:path] length]/1024.00 /1024.00;
+}
+//压缩完之后 返回压缩视频的路径
+- (NSString *)compression:(NSURL *)videoUrl
+{
+    NSLog(@"压缩前大小 %f MB",[self fileSize:videoUrl]);
+    //    创建AVAsset对象
+    AVAsset* asset = [AVAsset assetWithURL:videoUrl];
+    /*   创建AVAssetExportSession对象
+     压缩的质量
+     AVAssetExportPresetLowQuality   最low的画质最好不要选择实在是看不清楚
+     AVAssetExportPresetMediumQuality  使用到压缩的话都说用这个
+     AVAssetExportPresetHighestQuality  最清晰的画质
+     
+     */
+    AVAssetExportSession * session = [[AVAssetExportSession alloc] initWithAsset:asset presetName:AVAssetExportPresetMediumQuality];
+    //优化网络
+    session.shouldOptimizeForNetworkUse = YES;
+    //转换后的格式
+    
+    //拼接输出文件路径 为了防止同名 可以根据日期拼接名字 或者对名字进行MD5加密
+    
+//    NSString* path = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"hello.mp4"];
+#warning 视频存放在缓存文件夹里面 不要存放到DocumentDirectory
+    // 如果每次想存储不一样的视频 可以使用时间戳进行保存视频和图片
+    NSString* path = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"hello.mp4"];
+    NSLog(@"视频路径 %@",path);
+    //判断文件是否存在，如果已经存在删除
+    [[NSFileManager defaultManager]removeItemAtPath:path error:nil];
+    //设置输出路径
+    session.outputURL = [NSURL fileURLWithPath:path];
+    
+    //设置输出类型  这里可以更改输出的类型 具体可以看文档描述
+    session.outputFileType = AVFileTypeMPEG4;
+    
+    [session exportAsynchronouslyWithCompletionHandler:^{
+        NSLog(@"%@",[NSThread currentThread]);
+        //压缩完成
+        if (session.status==AVAssetExportSessionStatusCompleted) {
+            //在主线程中刷新UI界面，弹出控制器通知用户压缩完成
+            dispatch_async(dispatch_get_main_queue(), ^{
+                NSLog(@"导出完成");
+                self->CompressURL = session.outputURL;
+                NSLog(@"压缩完毕,压缩后大小 %f MB",[self fileSize:self->CompressURL]);
+            });
+            
+        }
+        
+    }];
+    
+    return path;
+}
+#pragma mark - 图片
+- (NSString *)saveImage:(UIImage *)image {
+//    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
+    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSCachesDirectory,NSUserDomainMask,YES);
+    NSString *filePath = [[paths objectAtIndex:0]stringByAppendingPathComponent:
+                          [NSString stringWithFormat:@"hello.png"]];  // 保存文件的名称
+    BOOL result =[UIImagePNGRepresentation(image)writeToFile:filePath   atomically:YES]; // 保存成功会返回YES
+    if (result == YES) {
+        NSLog(@"保存成功");
+    }
+    return filePath;
+    
+}
+
+
+
+// 图片以data形式保存
+/*
++ (NSString *)uuid{
+    // create a new UUID which you own
+    CFUUIDRef uuidref = CFUUIDCreate(kCFAllocatorDefault);
+    // create a new CFStringRef (toll-free bridged to NSString)
+    // that you own
+    CFStringRef uuid = CFUUIDCreateString(kCFAllocatorDefault, uuidref);
+    NSString *result = (__bridge NSString *)uuid;
+    //release the uuidref
+    CFRelease(uuidref);
+    // release the UUID
+    CFRelease(uuid);
+    return result;
+}
+
+- (NSString *)saveImg:(UIImage *)image withVideoMid:(NSString *)imgName{
+    
+    if (!image) {  //防止image不存在，存一个占位图
+        image = [UIImage imageNamed:@"posters_default_horizontal"];
+    }
+    if (!imgName) { //防止imgName不存在,获取一个随机字符串
+        imgName = [NSString uuid];
+    }
+    //png格式
+    NSData *imagedata=UIImagePNGRepresentation(image);
+    //JEPG格式
+    //NSData *imagedata=UIImageJEPGRepresentation(m_imgFore,1.0);
+    
+    NSString *savedImagePath = [[PVRSandBoxHelper AlbumVideoImagePath] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.png", videoMid]];
+    [imagedata writeToFile:savedImagePath atomically:YES];
+    return savedImagePath;
+}
+
+*/
+
+
+#pragma mark - 获取视频列表
+
+//-(void)run
+//{
+//    __weak ViewController *weakSelf = self;
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//        ALAssetsLibraryGroupsEnumerationResultsBlock listGroupBlock = ^(ALAssetsGroup *group, BOOL *stop) {
+//            if (group != nil) {
+//                [weakSelf.groupArrays addObject:group];
+//            } else {
+//                [weakSelf.groupArrays enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+//                    [obj enumerateAssetsUsingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
+//                        if ([result thumbnail] != nil) {
+//                            // 照片
+//                            if ([[result valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypePhoto]){
+//                                
+//                                // NSDate *date= [result valueForProperty:ALAssetPropertyDate];
+//                                // UIImage *image = [UIImage imageWithCGImage:[result thumbnail]];
+//                                // NSString *fileName = [[result defaultRepresentation] filename];
+//                                // NSURL *url = [[result defaultRepresentation] url];
+//                                // int64_t fileSize = [[result defaultRepresentation] size];
+//                                //
+//                                // NSLog(@"date = %@",date);
+//                                // NSLog(@"fileName = %@",fileName);
+//                                // NSLog(@"url = %@",url);
+//                                // NSLog(@"fileSize = %lld",fileSize);
+//                                //
+//                                // // UI的更新记得放在主线程,要不然等子线程排队过来都不知道什么年代了,会很慢的
+//                                // dispatch_async(dispatch_get_main_queue(), ^{
+//                                // self.litimgView.image = image;
+//                                // });
+//                                NSLog(@"读取到照片了");
+//                            }
+//                            // 视频
+//                            else if ([[result valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo] ){
+//                                
+//                                NSURL *url = [[result defaultRepresentation] url];
+//                                UIImage *image = [UIImage imageWithCGImage:[result thumbnail]];                                NSLog(@"%@",url);
+//                                dispatch_async(dispatch_get_main_queue(), ^{
+//                                    self.litimgView.image = image;
+//                                });
+//                                // 和图片方法类似
+//                            }
+//                        }
+//                    }];
+//                }];
+//                
+//            }
+//        };
+//        
+//        ALAssetsLibraryAccessFailureBlock failureBlock = ^(NSError *error)
+//        {
+//            
+//            NSString *errorMessage = nil;
+//            
+//            switch ([error code]) {
+//                case ALAssetsLibraryAccessUserDeniedError:
+//                case ALAssetsLibraryAccessGloballyDeniedError:
+//                    errorMessage = @"用户拒绝访问相册,请在<隐私>中开启";
+//                    break;
+//                    
+//                default:
+//                    errorMessage = @"Reason unknown.";
+//                    break;
+//            }
+//            
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"错误,无法访问!"
+//                                                                   message:errorMessage
+//                                                                  delegate:self
+//                                                         cancelButtonTitle:@"确定"
+//                                                         otherButtonTitles:nil, nil];
+//                [alertView show];
+//            });
+//        };
+//        
+//        
+//        ALAssetsLibrary *assetsLibrary = [[ALAssetsLibrary alloc]  init];
+//        [assetsLibrary enumerateGroupsWithTypes:ALAssetsGroupAll
+//                                     usingBlock:listGroupBlock failureBlock:failureBlock];
+//    });
+//}
 
 
 @end
