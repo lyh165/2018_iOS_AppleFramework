@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9B013610216745AA006890DC /* NSDictionary+LYH_JSONLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B01360F216745AA006890DC /* NSDictionary+LYH_JSONLog.m */; };
 		9B5A29B5215D3CE5003E700A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B5A29B4215D3CE5003E700A /* AppDelegate.m */; };
 		9B5A29B8215D3CE5003E700A /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B5A29B7215D3CE5003E700A /* ViewController.m */; };
 		9B5A29BB215D3CE5003E700A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9B5A29B9215D3CE5003E700A /* Main.storyboard */; };
@@ -16,6 +17,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9B01360E216745AA006890DC /* NSDictionary+LYH_JSONLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+LYH_JSONLog.h"; sourceTree = "<group>"; };
+		9B01360F216745AA006890DC /* NSDictionary+LYH_JSONLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+LYH_JSONLog.m"; sourceTree = "<group>"; };
 		9B5A29B0215D3CE5003E700A /* Framework(AVFoundation_&_ MobileCoreServices)_音频视频.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Framework(AVFoundation_&_ MobileCoreServices)_音频视频.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B5A29B3215D3CE5003E700A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		9B5A29B4215D3CE5003E700A /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -62,6 +65,8 @@
 				9B5A29B4215D3CE5003E700A /* AppDelegate.m */,
 				9B5A29B6215D3CE5003E700A /* ViewController.h */,
 				9B5A29B7215D3CE5003E700A /* ViewController.m */,
+				9B01360E216745AA006890DC /* NSDictionary+LYH_JSONLog.h */,
+				9B01360F216745AA006890DC /* NSDictionary+LYH_JSONLog.m */,
 				9B5A29B9215D3CE5003E700A /* Main.storyboard */,
 				9B5A29BC215D3CE7003E700A /* Assets.xcassets */,
 				9B5A29BE215D3CE7003E700A /* LaunchScreen.storyboard */,
@@ -144,6 +149,7 @@
 				9B5A29B8215D3CE5003E700A /* ViewController.m in Sources */,
 				9B5A29C3215D3CE7003E700A /* main.m in Sources */,
 				9B5A29B5215D3CE5003E700A /* AppDelegate.m in Sources */,
+				9B013610216745AA006890DC /* NSDictionary+LYH_JSONLog.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

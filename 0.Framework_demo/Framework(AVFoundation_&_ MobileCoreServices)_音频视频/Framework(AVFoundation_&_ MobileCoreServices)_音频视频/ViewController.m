@@ -16,6 +16,7 @@
 #import <AVFoundation/AVAsset.h>
 #import <AVFoundation/AVAssetImageGenerator.h>
 #import <AVFoundation/AVTime.h>
+#import "NSDictionary+LYH_JSONLog.h"
 
 @interface ViewController ()<UIImagePickerControllerDelegate,UINavigationControllerDelegate>
 {
@@ -26,7 +27,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *photo;//照片展示视图
 @property (strong ,nonatomic) AVPlayer *player;//播放器，用于录制完视频后播放视频
 @property (weak, nonatomic) IBOutlet UIImageView *Img_VideoFirst; // 录制之后的视频第一帧
-
+@property (assign,nonatomic) BOOL isSelectVideo;
 /**
  解决系统相机英文的问题
  info.plist
@@ -50,22 +51,9 @@
     [super viewDidLoad];
     //通过这里设置当前程序是拍照还是录制视频
     _isVideo=YES;
+    _isSelectVideo = NO;
     
-    
-    self.navigationItem.title = @"Demo";
-    self.view.backgroundColor = [UIColor clearColor];
-    
-    // 初始化
-    self.groupArrays = [NSMutableArray array];
-    
-    UIButton * btn1 = [UIButton buttonWithType:UIButtonTypeCustom];
-    btn1.frame = CGRectMake(50, 50, 100, 50);
-    btn1.backgroundColor = [UIColor orangeColor];
-    [self.view addSubview:btn1];
-    [btn1 addTarget:self action:@selector(testRun) forControlEvents:UIControlEventTouchUpInside];
-    // 图片或者视频的缩略图显示
-    self.litimgView = [[UIImageView alloc] initWithFrame:CGRectMake(100, 200, 120, 120)];
-    [self.view addSubview:_litimgView];
+
    
 }
 
@@ -78,6 +66,7 @@
 // 获取系统的视频
 - (IBAction)getSystemVideo:(UIButton *)sender {
     NSLog(@"2、获取系统的所有视频");
+    [self selectAction];
 }
 
 #pragma mark - UIImagePickerController代理方法
@@ -98,10 +87,17 @@
         NSLog(@"video...");
         NSURL *url=[info objectForKey:UIImagePickerControllerMediaURL];//视频路径
         NSString *urlStr=[url path];
+        
+        if (YES==_isSelectVideo) {
+            NSError *error;
+            [self video:urlStr didFinishSavingWithError:error contextInfo:nil];
+        }
+        else
         if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(urlStr)) {
             //保存视频到相簿，注意也可以使用ALAssetsLibrary来保存
             UISaveVideoAtPathToSavedPhotosAlbum(urlStr, self, @selector(video:didFinishSavingWithError:contextInfo:), nil);//保存视频到相簿
         }
+        
         
     }
     
@@ -137,6 +133,7 @@
 - (void)video:(NSString *)videoPath didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo{
     if (error) {
         NSLog(@"保存视频过程中发生错误，错误信息:%@",error.localizedDescription);
+        _isSelectVideo = NO;
     }else{
         NSLog(@"视频保存成功.");
         
@@ -150,20 +147,21 @@
         NSLog(@"compressionVideoPath %@",compressionVideoPath);
 
 #warning 这里可以在图片里面进行播放视频 项目一般不使用 这里只是用来测试
-        _player=[AVPlayer playerWithURL:url];
-        AVPlayerLayer *playerLayer=[AVPlayerLayer playerLayerWithPlayer:_player];
-        playerLayer.frame=self.photo.frame;
-        [self.photo.layer addSublayer:playerLayer];
-        [_player play];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.Img_VideoFirst.image = [self getVideoPreViewImage:url];
-            NSString *videoFirstImage = [self saveImage:[self getVideoPreViewImage:url]];
-            NSLog(@"videoFirstImage %@",videoFirstImage);
-            // 这里进行发送请求
-            NSLog(@"传递数据给服务器");
-
-        });
+//        _player=[AVPlayer playerWithURL:url];
+//        AVPlayerLayer *playerLayer=[AVPlayerLayer playerLayerWithPlayer:_player];
+//        playerLayer.frame=self.photo.frame;
+//        [self.photo.layer addSublayer:playerLayer];
+//        [_player play];
+//#warning 不允许这样处理 需要压缩完毕之后才能把地址给服务器
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            self.Img_VideoFirst.image = [self getVideoPreViewImage:url];
+//            NSString *videoFirstImage = [self saveImage:[self getVideoPreViewImage:url]];
+//            NSLog(@"videoFirstImage %@",videoFirstImage);
+//            // 这里进行发送请求
+//            NSLog(@"传递数据给服务器");
+//            self.isSelectVideo = NO;
+//
+//        });
 
     }
 }
@@ -300,7 +298,19 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 NSLog(@"导出完成");
                 self->CompressURL = session.outputURL;
+                self.isSelectVideo = NO;
                 NSLog(@"压缩完毕,压缩后大小 %f MB",[self fileSize:self->CompressURL]);
+#pragma mark 压缩完成之后的操作 (有服务器才操作)
+                self.Img_VideoFirst.image = [self getVideoPreViewImage:videoUrl];
+                // 将第一帧图片存储到缓存中
+                NSString *videoFirstImage = [self saveImage:[self getVideoPreViewImage:videoUrl]];
+                NSLog(@"videoFirstImage %@",videoFirstImage);
+                NSLog(@"compressionVideoPath %@",path);
+                NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+                [dict setValue:videoFirstImage forKey:@"videoImg"];
+                [dict setValue:path forKey:@"videoUri"];
+                NSString *jsonStr = [dict lyh_jsonLog_descriptionWithLocale:nil];
+                NSLog(@"需要传递的路径 %@",jsonStr);
             });
             
         }
@@ -311,6 +321,7 @@
 }
 #pragma mark - 图片
 - (NSString *)saveImage:(UIImage *)image {
+#warning 如果想保持随机不一样的图片可以添加时间戳
 //    NSArray *paths =NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
     NSArray *paths =NSSearchPathForDirectoriesInDomains(NSCachesDirectory,NSUserDomainMask,YES);
     NSString *filePath = [[paths objectAtIndex:0]stringByAppendingPathComponent:
@@ -363,87 +374,22 @@
 
 
 #pragma mark - 获取视频列表
+- (void)selectAction{
+    NSLog(@"从相册选择");
+    UIImagePickerController *picker=[[UIImagePickerController alloc] init];
+    picker.delegate=self;
+    picker.allowsEditing=NO;
+    picker.videoMaximumDuration = 15.0;//视频最长长度
+    picker.videoQuality = UIImagePickerControllerQualityTypeMedium;//视频质量
+    //媒体类型：@"public.movie" 为视频  @"public.image" 为图片
+    //这里只选择展示视频
+    picker.mediaTypes = [NSArray arrayWithObjects:@"public.movie", nil];
+    picker.sourceType= UIImagePickerControllerSourceTypeSavedPhotosAlbum;
+    [self presentViewController:picker animated:YES completion:^{
+        self.isSelectVideo = YES;
+    }];
+}
 
-//-(void)run
-//{
-//    __weak ViewController *weakSelf = self;
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//        ALAssetsLibraryGroupsEnumerationResultsBlock listGroupBlock = ^(ALAssetsGroup *group, BOOL *stop) {
-//            if (group != nil) {
-//                [weakSelf.groupArrays addObject:group];
-//            } else {
-//                [weakSelf.groupArrays enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-//                    [obj enumerateAssetsUsingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
-//                        if ([result thumbnail] != nil) {
-//                            // 照片
-//                            if ([[result valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypePhoto]){
-//                                
-//                                // NSDate *date= [result valueForProperty:ALAssetPropertyDate];
-//                                // UIImage *image = [UIImage imageWithCGImage:[result thumbnail]];
-//                                // NSString *fileName = [[result defaultRepresentation] filename];
-//                                // NSURL *url = [[result defaultRepresentation] url];
-//                                // int64_t fileSize = [[result defaultRepresentation] size];
-//                                //
-//                                // NSLog(@"date = %@",date);
-//                                // NSLog(@"fileName = %@",fileName);
-//                                // NSLog(@"url = %@",url);
-//                                // NSLog(@"fileSize = %lld",fileSize);
-//                                //
-//                                // // UI的更新记得放在主线程,要不然等子线程排队过来都不知道什么年代了,会很慢的
-//                                // dispatch_async(dispatch_get_main_queue(), ^{
-//                                // self.litimgView.image = image;
-//                                // });
-//                                NSLog(@"读取到照片了");
-//                            }
-//                            // 视频
-//                            else if ([[result valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo] ){
-//                                
-//                                NSURL *url = [[result defaultRepresentation] url];
-//                                UIImage *image = [UIImage imageWithCGImage:[result thumbnail]];                                NSLog(@"%@",url);
-//                                dispatch_async(dispatch_get_main_queue(), ^{
-//                                    self.litimgView.image = image;
-//                                });
-//                                // 和图片方法类似
-//                            }
-//                        }
-//                    }];
-//                }];
-//                
-//            }
-//        };
-//        
-//        ALAssetsLibraryAccessFailureBlock failureBlock = ^(NSError *error)
-//        {
-//            
-//            NSString *errorMessage = nil;
-//            
-//            switch ([error code]) {
-//                case ALAssetsLibraryAccessUserDeniedError:
-//                case ALAssetsLibraryAccessGloballyDeniedError:
-//                    errorMessage = @"用户拒绝访问相册,请在<隐私>中开启";
-//                    break;
-//                    
-//                default:
-//                    errorMessage = @"Reason unknown.";
-//                    break;
-//            }
-//            
-//            dispatch_async(dispatch_get_main_queue(), ^{
-//                UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"错误,无法访问!"
-//                                                                   message:errorMessage
-//                                                                  delegate:self
-//                                                         cancelButtonTitle:@"确定"
-//                                                         otherButtonTitles:nil, nil];
-//                [alertView show];
-//            });
-//        };
-//        
-//        
-//        ALAssetsLibrary *assetsLibrary = [[ALAssetsLibrary alloc]  init];
-//        [assetsLibrary enumerateGroupsWithTypes:ALAssetsGroupAll
-//                                     usingBlock:listGroupBlock failureBlock:failureBlock];
-//    });
-//}
 
 
 @end
