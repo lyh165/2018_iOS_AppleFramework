@@ -251,7 +251,6 @@
 //    
 //}
 
-
 //计算压缩大小
 - (CGFloat)fileSize:(NSURL *)path
 {
@@ -374,6 +373,7 @@
 
 
 #pragma mark - 获取视频列表
+// 参考   https://blog.csdn.net/u013602835/article/details/76640797
 - (void)selectAction{
     NSLog(@"从相册选择");
     UIImagePickerController *picker=[[UIImagePickerController alloc] init];
