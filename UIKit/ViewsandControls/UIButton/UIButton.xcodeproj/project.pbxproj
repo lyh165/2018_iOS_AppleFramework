@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9B75BBA4216C849000A864E9 /* CLBarrageCloseBtn.png in Resources */ = {isa = PBXBuildFile; fileRef = 9B75BBA2216C849000A864E9 /* CLBarrageCloseBtn.png */; };
+		9B75BBA5216C849000A864E9 /* CLBarrageOpenBtn.png in Resources */ = {isa = PBXBuildFile; fileRef = 9B75BBA3216C849000A864E9 /* CLBarrageOpenBtn.png */; };
 		9B926818214CE096008B12DF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B926817214CE096008B12DF /* AppDelegate.m */; };
 		9B92681B214CE096008B12DF /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B92681A214CE096008B12DF /* ViewController.m */; };
 		9B92681E214CE096008B12DF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9B92681C214CE096008B12DF /* Main.storyboard */; };
@@ -17,6 +19,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9B75BBA2216C849000A864E9 /* CLBarrageCloseBtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CLBarrageCloseBtn.png; sourceTree = "<group>"; };
+		9B75BBA3216C849000A864E9 /* CLBarrageOpenBtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CLBarrageOpenBtn.png; sourceTree = "<group>"; };
 		9B926813214CE096008B12DF /* UIButton.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UIButton.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B926816214CE096008B12DF /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		9B926817214CE096008B12DF /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -42,6 +46,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9B75BBA1216C849000A864E9 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				9B75BBA2216C849000A864E9 /* CLBarrageCloseBtn.png */,
+				9B75BBA3216C849000A864E9 /* CLBarrageOpenBtn.png */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
 		9B92680A214CE096008B12DF = {
 			isa = PBXGroup;
 			children = (
@@ -61,6 +74,7 @@
 		9B926815214CE096008B12DF /* UIButton */ = {
 			isa = PBXGroup;
 			children = (
+				9B75BBA1216C849000A864E9 /* Images */,
 				9B926816214CE096008B12DF /* AppDelegate.h */,
 				9B926817214CE096008B12DF /* AppDelegate.m */,
 				9B926819214CE096008B12DF /* ViewController.h */,
@@ -134,8 +148,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				9B926823214CE099008B12DF /* LaunchScreen.storyboard in Resources */,
+				9B75BBA4216C849000A864E9 /* CLBarrageCloseBtn.png in Resources */,
 				9B926820214CE099008B12DF /* Assets.xcassets in Resources */,
 				9B92681E214CE096008B12DF /* Main.storyboard in Resources */,
+				9B75BBA5216C849000A864E9 /* CLBarrageOpenBtn.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -290,7 +306,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 3FR6C5N825;
 				INFOPLIST_FILE = UIButton/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -306,7 +324,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 3FR6C5N825;
 				INFOPLIST_FILE = UIButton/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

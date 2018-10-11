@@ -25,7 +25,10 @@
  
  1、实现button带block / 参考文章 http://www.cocoachina.com/ios/20171019/20846.html
                                 https://github.com/CaiWanFeng/CQKit
+    功能方法明 function1
  
+ 2、按钮设置默认和选择状态
+    功能方法明 function1
  */
 
 @end
